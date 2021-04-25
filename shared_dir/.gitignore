@@ -1,4 +1,11 @@
-*
-!.gitignore
-!.bashrc
-!AIcon
+.cache/
+.config/
+.local/
+.npm/
+.nv/
+.pki/
+.pytorch_pretrained_biggan/
+.vscode-server/
+.wdm/
+.bash_history
+.vuerc

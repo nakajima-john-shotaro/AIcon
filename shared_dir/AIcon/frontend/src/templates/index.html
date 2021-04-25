@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+  <!-- <link rel="stylesheet" href="./css/bgd.css"> -->
+  <!-- <link rel="stylesheet" href="./css/bg.css"> -->
+  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.cookie.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  <title>AIcon Generator</title>
+</head>
+
+<body>
+  <div class="jumbotron bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md">
+          <img class="w-50" style="display: block; margin: auto;" src="static/img/AIcon_logo_9.gif" />
+        </div>
+        <!-- <div class="d-none d-md-block col-md">
+          <img class="w-100" src="{{ url_for('static', filename='img/logo.png') }}" />
+        </div>
+        <div class="d-none d-md-block col-md">
+          <img class="w-100" src="{{ url_for('static', filename='img/logo.png') }}" />
+        </div>
+        <div class="d-none d-md-block col-md" id="cli">
+          <img class="w-100" src="{{ url_for('static', filename='img/logo.png') }}" />
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <!-- テキストボックスの表示とボタンの配置 -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md mb-3">
+        <div class="card h-100">
+          <div class="card-header bg-secondary"></div>
+          <div class="card-body bg-light">
+            <div class="form-group">
+              <label class="col-form-label col-form-label-lg" for="inputLarge">あなたの思い描いたイメージをテキストで表現してください</label>
+              <form id="form1">
+                <div class="cp_iptxt">
+                  <input class="form-control form-control-lg ef" name="text" type="text" placeholder="(例) ソファの上で寝ている猫"
+                    id="ja_text" />
+                  <span class="focus_line"><i></i></span>
+                </div>
+              </form>
+            </div>
+            <div class="card mt-5" id="config-card">
+              <h5 class="card-header bg-secondary">設定</h5>
+              <div class="card-body bg-light">
+                <fieldset class="form-group mx-3">
+                  <legend class="d-flex">
+                    <div class="flex-fill text-left">はやい</div>
+                    <div class="flex-fill text-right">きれい</div>
+                  </legend>
+                  <!-- <label for="customRange1">Example range</label> -->
+                  <input type="range" class="custom-range" min="50" max="1050" step="5" value="550" id="iterations">
+                </fieldset>
+              </div>
+              <!-- <div class="card-footer bg-secondary"></div> -->
+            </div>
+            <div id="making_comp_convert">
+            <div id="body-progress-bar">
+              <img id="now_making" class="card-img d-block w-50 h-50" style="display: block; margin: auto;" src="static/img/作成中.gif">
+              <div class="progress bg-white mt-5">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress-bar" style="width: 0%"
+                  role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            <div id="complete" class="mt-5">
+            <img  class="card-img d-block" style="display: block; margin: auto;" src="static/img/完成.svg">
+          </div>
+          </div>
+          </div>
+          <div class="d-flex btn-group">
+            <button class="card-body btn w-50 btn-primary" id="button_start_stop" onclick="start()">
+              開始
+            </button>
+            <button class="card-body btn w-50 bg-white text-light" type="reset" id="button_reset"
+              onclick="clearTextarea()">
+              リセット
+            </button>
+          </div>
+          <div class="card-footer bg-secondary"></div>
+        </div>
+      </div>
+      <div class="col-md mb-3">
+        <div class="card h-100" id="result">
+          <div class="card-header bg-secondary"></div>
+          <img id="result-img" class="card-img d-block mx-auto" src="static/img/AIcon_loading_3.gif" />
+          <button type="button" id="result-overlay" class="card-img-overlay w-100 h-100"
+            style="background-color: rgba(0, 0, 0, 0);" onmouseout="$(this).hide();" data-toggle="modal"
+            data-target="#modal-save">
+            <img class="w-100 h-100" src="static/img/AIcon_save_text_2.svg" alt="">
+          </button>
+          <div class="card-footer bg-secondary"></div>
+        </div>
+      </div>
+    </div>
+    <!-- <a href="static/img/logo.png" download class="card-body bg-light btn btn-success w-100">画像ダウンロード</a> -->
+
+    <div class="modal fade" id="modal-save" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-secondary">
+            <h5 class="modal-title" id="label1">保存・アップロード</h5>
+            <!-- <img src="static/img/保存_アップロード.svg" alt=""　style="width: auto; height: auto;"> -->
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body bg-light">
+            <div>
+              <div class="row h-50">
+                <a class="col-6" href="#" id="upload-twitter" onclick="twitter_icon();">
+                  <img class="w-100 h-100" src="static/img/icon.png" alt="">
+                </a>
+                <a class="col-6" href="#" id="upload-twitter" onclick="twitter_tweet();">
+                  <img class="w-100 h-100" src="static/img/tweet.png" alt="">
+                </a>
+              </div>
+              <div class="row h-50">
+                <a class="col-6" id="download-origin">
+                  <img class="w-100 h-100" src="static/img/png.png" alt="">
+                </a>
+                <a class="col-6" id="download-gif">
+                  <img class="w-100 h-100" src="static/img/gif.png" alt="">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+      function dlimg(id) {
+        var img = document.getElementById(id);
+        if (img) {
+          // var key = 'decojiro.net';
+          var str = img.src;
+          var len = key.length;
+          var pos = str.indexOf('decojiro.net');
+          var path = str.substr(pos + len);
+          location.href = '/imgdl' + path;
+        }
+      }
+
+      function wait(msec) {
+        var objDef = new $.Deferred();
+        setTimeout(function () {
+          objDef.resolve(msec);
+        }, msec);
+        return objDef.promise();
+      }
+      var hash = "000000000000";
+      // テキストの取得&  text:"打った文字"
+      function start() {
+        if ($("#ja_text").val() == "") {
+          return;
+        }
+        // $("#complete").fadeOut();
+        $("#button_start_stop").attr("onclick", "stop()");
+        $("#button_start_stop").removeClass("btn-primary").removeClass("btn-success");
+        $("#button_start_stop").addClass("btn-danger");
+        $("#button_start_stop").html("中止");
+        $("#config-card").fadeOut("slow", function () { $("#body-progress-bar").fadeIn("slow"); });
+
+
+        // const json_data = JSON.stringify(obj2);
+        write_summary = {
+          text: $("#ja_text").val(),
+          model_name: "big_sleep",
+          image_width: 256,
+          save_every: 1,
+          epochs: 1,
+          iterations: parseInt($('#iterations').val()),
+          hash: hash,
+          abort: false,
+          gif_path: "cant_save_gif.err",
+        };
+        const json_data = JSON.stringify(write_summary);
+        console.log("↓　送信データの確認　↓");
+        console.log(write_summary);
+        const eng_summary = communication(json_data);
+      }
+
+      function stop() {
+        $("#button_start_stop").attr("onclick", "start()");
+        $("#button_start_stop").removeClass("btn-primary").removeClass("btn-danger");
+        $("#button_start_stop").html("開始");
+        $("#body-progress-bar").fadeOut();
+
+
+        write_summary = {
+          text: $("#ja_text").val(),
+          model_name: "big_sleep",
+          image_width: 256,
+          save_every: 1,
+          epochs: 1,
+          iterations: parseInt($('#iterations').val()),
+          hash: hash,
+          abort: true,
+        };
+
+        const json_data = JSON.stringify(write_summary);
+        console.log("↓　送信データの確認　↓");
+        console.log(write_summary);
+        const eng_summary = communication(json_data);
+        hash = "000000000000";
+        img_paths.length = 0;
+        $("#button_start_stop").attr("onclick", "reload()");
+      }
+
+      // リセットボタンの関数
+      function clearTextarea() {
+        $("#ja_text").val("");
+      }
+
+      function twitter_icon() {
+        $.ajax({
+          url: "http://hayashi.tasakilab:8082/twitter-auth",
+          method: "POST", //HTTPメソッドの種別
+          dataType: "json", //データの受信形式
+          timeout: 10000, //タイムアウト値（ミリ秒）
+          async: false, //同期通信  false:同期  true:非同期
+          contentType: "application/json; charset=utf-8",
+        })
+          .done(function (r_data, textStatus, xhr) {
+            $.cookie('twitter_mode', "icon");
+            $.cookie('img_path', $("#download-origin").attr("href"));
+            console.log(r_data);
+            window.open(r_data["auth_url"]);
+          })
+          .fail(function (r_data, textStatus, error) {
+            // 通信失敗時
+            console.log(r_data);
+            console.log(typeof r_data);
+            console.log("failed");
+          });
+      }
+
+      function twitter_tweet() {
+        $.ajax({
+          url: "http://hayashi.tasakilab:8082/twitter-auth",
+          method: "POST", //HTTPメソッドの種別
+          dataType: "json", //データの受信形式
+          timeout: 10000, //タイムアウト値（ミリ秒）
+          async: false, //同期通信  false:同期  true:非同期
+          contentType: "application/json; charset=utf-8",
+        })
+          .done(function (r_data, textStatus, xhr) {
+            $.cookie('twitter_mode', "tweet");
+            $.cookie('img_path', $("#download-origin").attr("href"));
+            console.log(r_data);
+            window.open(r_data["auth_url"]);
+          })
+          .fail(function (r_data, textStatus, error) {
+            // 通信失敗時
+            console.log(r_data);
+            console.log(typeof r_data);
+            console.log("failed");
+          });
+      }
+
+      //通信をする
+      function communication(s_data) {
+        $.ajax({
+          url: "http://hayashi.tasakilab:8081/data",
+          method: "POST", //HTTPメソッドの種別
+          data: s_data, //jsonに変換
+          dataType: "json", //データの受信形式
+          timeout: 10000, //タイムアウト値（ミリ秒）
+          async: false, //同期通信  false:同期  true:非同期
+          contentType: "application/json; charset=utf-8",
+        })
+          .done(function (r_data, textStatus, xhr) {
+            // 通信成功時
+            /*$("#translated").text(r_data["text"]);*/
+            console.log("success");
+            console.log("↓  受信データの確認  ↓");
+            console.log(r_data);
+
+            let tmp_data = JSON.parse(s_data);
+            hash = r_data["hash"];
+            tmp_data["hash"] = hash;
+            let total_ittr = r_data["total_ittr"];
+            let path = r_data["path"];
+            let ittr = r_data["ittr"];
+            let percentage = ittr * 100 / total_ittr;
+            console.log("↓　イテレーションの確認　↓");
+            console.log(total_ittr);
+            console.log(ittr);
+            console.log(percentage);
+            $("#progress-bar").attr("style", "width:" + percentage + "%");
+            $("#progress-bar").attr("aria-valuenow", percentage);
+
+            // 受け取りデータの表示
+            console.log(path.includes("img_not_generated_yet.err"));
+            console.log("gifのパス");
+            console.log(r_data["gif_path"]);
+            if (path.includes("img_not_generated_yet.err")) {
+              $("#result-img")
+                .attr("src", "static/img/AIcon_loading_3.gif")
+                .on("load", function () {
+                  $("#result-img").fadeIn();
+                });
+            } else {
+              img_paths.push(r_data["path"]);
+              $("#result-img").fadeOut(50, function () {
+                $("#result-img")
+                  .attr("src", r_data["path"])
+                  .on("load", function () {
+                    $("#result-img").fadeIn();
+                  });
+              });
+            }
+
+            if (r_data["is_finish"] == false) {
+              wait(3000).done(function () {
+                communication(JSON.stringify(tmp_data));
+              });
+            } else {
+              $("#result-img").attr('onmouseover', '$("#result-overlay").show();');
+              $("#body-progress-bar").fadeOut("slow", function () { $("#complete").fadeIn("slow"); });
+              // $("#result-overlay").attr("href", r_data['path']).attr('download', r_data['path'].replace(/^.*[\\\/]/, ''));
+              $("#download-origin").attr("href", r_data['path']).attr('download', $('#ja_text').val() + '.' +
+                r_data['path'].split('.').pop());
+              // $("#twitter-send").attr('onclick', 'twitter();');
+              // $("#upload-twitter").attr("href", "http://hayashi.tasakilab:8082/authentication").attr({path: r_data['path']});
+              if (r_data["gif_path"] == "cant_save_gif.err") { } else {
+                $("#download-gif").attr("href", r_data['gif_path']).attr('download', $('#ja_text').val() + '.' +
+                  r_data[
+                    'gif_path'].split('.').pop());
+              }
+              $("#button_start_stop").removeClass("btn-primary").removeClass("btn-danger");
+              $("#button_start_stop").addClass("btn-success");
+              $("#button_start_stop").html("もう一回");
+              $("#button_start_stop").attr("onclick", "reload()");
+            }
+          })
+          .fail(function (r_data, textStatus, error) {
+            // 通信失敗時
+            console.log(r_data);
+            console.log(typeof r_data);
+            console.log("failed");
+          });
+      }
+
+      function reload() {
+        window.location.reload();
+      }
+
+      var img_paths = [];
+
+      let examples = [
+        "炎と氷",
+        "パン",
+        "銀河",
+        "シンデレラ",
+        "光り輝く銀河",
+        "湖",
+        "宇宙にある地球",
+        "悪魔の氷",
+        "炎の大地",
+        "アリス・イン・ワンダーランド",
+      ];
+
+      let examples_img = [
+        "static/img/demo_img/fire_and_ice.png",
+        "static/img/demo_img/bread.png",
+        "static/img/demo_img/galaxy.png",
+        "static/img/demo_img/cinderella.png",
+        "static/img/demo_img/galaxy_in_the_process_of_an_exceptionally_bright_light.png",
+        "static/img/demo_img/lagoon.png",
+        "static/img/demo_img/Earth_in_the_space.png",
+        "static/img/demo_img/Demon_Ice.png",
+        "static/img/demo_img/The_Land_of_Fire.png",
+        "static/img/demo_img/Alice_in_wonderland.png",
+      ]
+      $(function () {
+        // $("#result").hide();
+        $("#body-progress-bar").hide();
+        $("#complete").hide();
+        $("#tmp-img").hide();
+        $("#result-overlay").hide();
+        let random = Math.floor(Math.random() * examples.length);
+        $("#ja_text").attr("placeholder", "(例) " + examples[random]);
+        $("#result-img").attr("src", examples_img[random])
+      });
+
+      $(function () {
+        $("input").on("keydown", function (ev) {
+          if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
+            return false;
+          } else {
+            return true;
+          }
+        });
+      });
+
+      $(function () {
+        $("select").focus(function () {
+          $(this).on("keydown", function (ev) {
+            if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
+              return false;
+            } else {
+              return true;
+            }
+          });
+        });
+      });
+    </script>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+          properly without JavaScript enabled. Please enable it to
+          continue.</strong>
+    </noscript>
+</body>
+
+</html>
