@@ -124,9 +124,9 @@ def remove_dir():
             print(f'Deleted following dir due to timeout: {os.path.join(dst_img_dir, dir_name)}', file=sys.stderr)
 
     files = os.listdir(dst_gif_dir)
-    dir_list  = [f for f in files if os.path.isdir(os.path.join(dst_img_dir, f))]
+    dir_list  = [f for f in files if os.path.isdir(os.path.join(dst_gif_dir, f))]
     for dir_name in dir_list:
-        creation_time = datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(dst_img_dir, dir_name)))
+        creation_time = datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(dst_gif_dir, dir_name)))
         time_delta = datetime.datetime.now() - creation_time
         if time_delta.total_seconds() > 900:
             shutil.rmtree(os.path.join(dst_gif_dir, dir_name))
