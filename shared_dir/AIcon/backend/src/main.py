@@ -98,8 +98,9 @@ def aicon():
 
 def generate_gif(hash_id):
     images = []
-    for file_name in sorted(os.listdir(os.path.join(dst_img_dir, hash_id))):
-        images.append(imread(os.path.join(os.path.join(dst_img_dir, hash_id), file_name)))
+    for i, file_name in enumerate(sorted(os.listdir(os.path.join(dst_img_dir, hash_id)))):
+        if i % 2 == 0:
+            images.append(imread(os.path.join(os.path.join(dst_img_dir, hash_id), file_name)))
     if len(images) < 2:
         return 'cant_save_gif.err'
     mimsave(f'{dst_gif_dir}/{hash_id}/{hash_id}.gif', images, 'GIF')
