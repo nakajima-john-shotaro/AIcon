@@ -228,7 +228,7 @@
 
       function twitter_icon() {
         $.ajax({
-          url: "http://hayashi.tasakilab:8082/twitter-auth",
+          url: "http://blackbox.tasakilab:8082/twitter-auth",
           method: "POST", //HTTPメソッドの種別
           dataType: "json", //データの受信形式
           timeout: 10000, //タイムアウト値（ミリ秒）
@@ -251,7 +251,7 @@
 
       function twitter_tweet() {
         $.ajax({
-          url: "http://hayashi.tasakilab:8082/twitter-auth",
+          url: "http://blackbox.tasakilab:8082/twitter-auth",
           method: "POST", //HTTPメソッドの種別
           dataType: "json", //データの受信形式
           timeout: 10000, //タイムアウト値（ミリ秒）
@@ -275,7 +275,7 @@
       //通信をする
       function communication(s_data) {
         $.ajax({
-          url: "http://hayashi.tasakilab:8081/data",
+          url: "http://blackbox.tasakilab:8081/data",
           method: "POST", //HTTPメソッドの種別
           data: s_data, //jsonに変換
           dataType: "json", //データの受信形式
@@ -336,7 +336,7 @@
               $("#download-origin").attr("href", r_data['path']).attr('download', $('#ja_text').val() + '.' +
                 r_data['path'].split('.').pop());
               // $("#twitter-send").attr('onclick', 'twitter();');
-              // $("#upload-twitter").attr("href", "http://hayashi.tasakilab:8082/authentication").attr({path: r_data['path']});
+              // $("#upload-twitter").attr("href", "http://blackbox.tasakilab:8082/authentication").attr({path: r_data['path']});
               if (r_data["gif_path"] == "cant_save_gif.err") { } else {
                 $("#download-gif").attr("href", r_data['gif_path']).attr('download', $('#ja_text').val() + '.' +
                   r_data[
