@@ -1,7 +1,0 @@
-[core]
-	editor = \"C:\\Users\\nakajima\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\" --wait
-[user]
-	name = nakajima
-	email = 170442103@ccalumni.meijo-u.ac.jp
-[credential]
-	helper = "!f() { /home/pytorch/.vscode-server/bin/3c4e3df9e89829dce27b7b5c24508306b151f30d/node /tmp/vscode-remote-containers-db3902e5f82f60a1755375195c93f56b37df2cb8.js $*; }; f"
